@@ -6,7 +6,7 @@ import "./ErrorReporter.sol";
 import "./Exponential.sol";
 import "./EIP20Interface.sol";
 import "./EIP20NonStandardInterface.sol";
-import "./InterestRateModel.sol";
+import "./InterestModel/InterestRateModel.sol";
 
 /**
  * @title CREDIT's CToken Contract
