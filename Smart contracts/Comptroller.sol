@@ -7,8 +7,8 @@ import "./PriceOracle/PriceOracle.sol";
 import "./Interface/ComptrollerInterface.sol";
 import "./ComptrollerStorage.sol";
 import "./Unitroller.sol";
-import "./CREDIT.sol";
-import "./NEST.sol";
+import "./Tokens/CREDIT.sol";
+import "./Tokens/NEST.sol";
 
 /**
  * @title CREDIT's Comptroller Contract
