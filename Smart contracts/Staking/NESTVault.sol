@@ -2,7 +2,7 @@ pragma solidity ^0.5.16;
 import "./SafeBEP20.sol";
 import "./IBEP20.sol";
 import "./NESTVaultProxy.sol";
-import "./NESTVaultStorage.sol";
+import "../Storage/NESTVaultStorage.sol";
 import "./NESTVaultErrorReporter.sol";
 
 contract NESTVault is NESTVaultStorage {
