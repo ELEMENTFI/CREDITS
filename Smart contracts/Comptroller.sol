@@ -1,11 +1,11 @@
 pragma solidity ^0.5.16;
 
 import "./CToken.sol";
-import "./ErrorReporter.sol";
+import "./math/ErrorReporter.sol";
 import "./math/Exponential.sol";
 import "./PriceOracle/PriceOracle.sol";
 import "./Interface/ComptrollerInterface.sol";
-import "./ComptrollerStorage.sol";
+import "./Storage/ComptrollerStorage.sol";
 import "./Unitroller.sol";
 import "./Tokens/CREDIT.sol";
 import "./Tokens/NEST.sol";

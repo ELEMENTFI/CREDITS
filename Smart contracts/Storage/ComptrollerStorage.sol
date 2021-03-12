@@ -1,8 +1,8 @@
 pragma solidity ^0.5.16;
 
-import "./CToken.sol";
-import "./PriceOracle/PriceOracle.sol";
-import "./Interface/NESTControllerInterface.sol";
+import "../CToken.sol";
+import "../PriceOracle/PriceOracle.sol";
+import "../Interface/NESTControllerInterface.sol";
 
 contract UnitrollerAdminStorage {
     /**
