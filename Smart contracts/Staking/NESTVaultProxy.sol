@@ -1,6 +1,6 @@
 pragma solidity ^0.5.16;
 
-import "./NESTVaultStorage.sol";
+import "../Storage/NESTVaultStorage.sol";
 import "./NESTVaultErrorReporter.sol";
 
 contract NESTVaultProxy is NESTVaultAdminStorage, NESTVaultErrorReporter {
