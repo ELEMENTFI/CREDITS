@@ -10,7 +10,7 @@ import "./InterestModel/InterestRateModel.sol";
 
 /**
  * @title CREDIT's CToken Contract
- * @notice Abstract base for CTokens
+
  */
 contract CToken is CTokenInterface, Exponential, TokenErrorReporter {
     /**
