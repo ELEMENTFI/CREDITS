@@ -3,7 +3,7 @@ import "./SafeBEP20.sol";
 import "./IBEP20.sol";
 import "./NESTVaultProxy.sol";
 import "../Storage/NESTVaultStorage.sol";
-import "./NESTVaultErrorReporter.sol";
+import "../math/NESTVaultErrorReporter.sol";
 
 contract NESTVault is NESTVaultStorage {
     using SafeMath for uint256;
