@@ -35,7 +35,7 @@ contract CreditPriceOracle is PriceOracle {
         ref = _ref;
         admin = msg.sender;
     }
-
+    //price getting functions
     function getUnderlyingPrice(CToken cToken) public view returns (uint) {
         if (compareStrings(cToken.symbol(), "vBNB")) {
             IStdReference.ReferenceData memory data = ref.getReferenceData("BNB", "USD");
