@@ -1,10 +1,10 @@
 pragma solidity ^0.5.16;
 pragma experimental ABIEncoderV2;
 
-import "./PriceOracle.sol";
-import "./VBep20.sol";
+import "../TestingPriceOracle/PriceOracle.sol";
+import "../CBep20.sol";
 import "./BEP20Interface.sol";
-import "./SafeMath.sol";
+import "../math/SafeMath.sol";
 
 interface IStdReference {
     /// A structure returned whenever someone requests for standard reference data.
@@ -21,7 +21,7 @@ interface IStdReference {
     function getReferenceDataBulk(string[] calldata _bases, string[] calldata _quotes) external view returns (ReferenceData[] memory);
 }
 
-contract VenusPriceOracle is PriceOracle {
+contract CreditPriceOracle is PriceOracle {
     using SafeMath for uint256;
     address public admin;
 
@@ -36,15 +36,15 @@ contract VenusPriceOracle is PriceOracle {
         admin = msg.sender;
     }
 
-    function getUnderlyingPrice(VToken vToken) public view returns (uint) {
-        if (compareStrings(vToken.symbol(), "vBNB")) {
+    function getUnderlyingPrice(CToken cToken) public view returns (uint) {
+        if (compareStrings(cToken.symbol(), "vBNB")) {
             IStdReference.ReferenceData memory data = ref.getReferenceData("BNB", "USD");
             return data.rate;
-        }else if (compareStrings(vToken.symbol(), "XVS")) {
-            return prices[address(vToken)];
+        }else if (compareStrings(cToken.symbol(), "NEST")) {
+            return prices[address(cToken)];
         } else {
             uint256 price;
-            BEP20Interface token = BEP20Interface(VBep20(address(vToken)).underlying());
+            BEP20Interface token = BEP20Interface(CBep20(address(cToken)).underlying());
 
             if(prices[address(token)] != 0) {
                 price = prices[address(token)];
@@ -58,9 +58,9 @@ contract VenusPriceOracle is PriceOracle {
         }
     }
 
-    function setUnderlyingPrice(VToken vToken, uint underlyingPriceMantissa) public {
+    function setUnderlyingPrice(CToken cToken, uint underlyingPriceMantissa) public {
         require(msg.sender == admin, "only admin can set underlying price");
-        address asset = address(VBep20(address(vToken)).underlying());
+        address asset = address(CBep20(address(cToken)).underlying());
         emit PricePosted(asset, prices[asset], underlyingPriceMantissa, underlyingPriceMantissa);
         prices[asset] = underlyingPriceMantissa;
     }
