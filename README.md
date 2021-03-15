@@ -1,6 +1,6 @@
 # CREDIT
 
-Credit is the stable coin minting platform backed by TREE collateral and other crypto assets without centralized control.
+Credit is the stable coin minting platform backed by TREE Collateral and other crypto assets without centralized control.
 
 # Table of Contents
   - Install
