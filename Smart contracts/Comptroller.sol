@@ -11,9 +11,8 @@ import "./Tokens/CREDIT.sol";
 import "./Tokens/NEST.sol";
 
 /**
- * @title CREDIT's Comptroller Contract
- * @author CREDIT
- */
+Comptroller contract
+*/
 contract Comptroller is ComptrollerC2Storage, ComptrollerInterface, ComptrollerErrorReporter, Exponential {
     /// @notice Emitted when an admin supports a market
     event MarketListed(CToken cToken);
