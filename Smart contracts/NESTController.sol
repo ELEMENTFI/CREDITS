@@ -1,12 +1,12 @@
 pragma solidity ^0.5.16;
 
 import "./CToken.sol";
-import "./PriceOracle.sol";
-import "./ErrorReporter.sol";
-import "./Exponential.sol";
+import "./TestingPriceOracle/PriceOracle.sol";
+import "./math/ErrorReporter.sol";
+import "./math/Exponential.sol";
 import "./VAIControllerStorage.sol";
 import "./VAIUnitroller.sol";
-import "./VAI/VAI.sol";
+import "./Tokens/NEST.sol";
 
 interface ComptrollerLensInterface {
     function protocolPaused() external view returns (bool);
