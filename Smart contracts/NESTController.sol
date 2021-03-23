@@ -4,182 +4,182 @@ import "./CToken.sol";
 import "./TestingPriceOracle/PriceOracle.sol";
 import "./math/ErrorReporter.sol";
 import "./math/Exponential.sol";
-import "./VAIControllerStorage.sol";
-import "./VAIUnitroller.sol";
+import "./NESTControllerStorage.sol";
+import "./NESTUnitroller.sol";
 import "./Tokens/NEST.sol";
 
 interface ComptrollerLensInterface {
     function protocolPaused() external view returns (bool);
-    function mintedVAIs(address account) external view returns (uint);
-    function vaiMintRate() external view returns (uint);
-    function venusVAIRate() external view returns (uint);
-    function venusAccrued(address account) external view returns(uint);
+    function mintedNESTs(address account) external view returns (uint);
+    function nestMintRate() external view returns (uint);
+    function creditNESTRate() external view returns (uint);
+    function creditAccrued(address account) external view returns(uint);
     function getAssetsIn(address account) external view returns (CToken[] memory);
     function oracle() external view returns (PriceOracle);
 
-    function distributeVAIMinterVenus(address vaiMinter, bool distributeAll) external;
+    function distributeNESTMinterCredit(address nestMinter, bool distributeAll) external;
 }
 
 /**
- * @title Venus's VAI Comptroller Contract
- * @author Venus
+ * @title Credit's NEST Comptroller Contract
+ * @author Credit
  */
-contract VAIController is VAIControllerStorage, VAIControllerErrorReporter, Exponential {
+contract NESTController is NESTControllerStorage, NESTControllerErrorReporter, Exponential {
 
     /// @notice Emitted when Comptroller is changed
     event NewComptroller(ComptrollerInterface oldComptroller, ComptrollerInterface newComptroller);
 
     /**
-     * @notice Event emitted when VAI is minted
+     * @notice Event emitted when NEST is minted
      */
-    event MintVAI(address minter, uint mintVAIAmount);
+    event MintNEST(address minter, uint mintNESTAmount);
 
     /**
-     * @notice Event emitted when VAI is repaid
+     * @notice Event emitted when NEST is repaid
      */
-    event RepayVAI(address repayer, uint repayVAIAmount);
+    event RepayNEST(address repayer, uint repayNESTAmount);
 
-    /// @notice The initial Venus index for a market
-    uint224 public constant venusInitialIndex = 1e36;
+    /// @notice The initial Credit index for a market
+    uint224 public constant creditInitialIndex = 1e36;
 
     /*** Main Actions ***/
 
-    function mintVAI(uint mintVAIAmount) external returns (uint) {
+    function mintNEST(uint mintNESTAmount) external returns (uint) {
         if(address(comptroller) != address(0)) {
             require(!ComptrollerLensInterface(address(comptroller)).protocolPaused(), "protocol is paused");
 
             address minter = msg.sender;
 
             // Keep the flywheel moving
-            updateVenusVAIMintIndex();
-            ComptrollerLensInterface(address(comptroller)).distributeVAIMinterVenus(minter, false);
+            updateCreditNESTMintIndex();
+            ComptrollerLensInterface(address(comptroller)).distributeNESTMinterCredit(minter, false);
 
             uint oErr;
             MathError mErr;
-            uint accountMintVAINew;
-            uint accountMintableVAI;
+            uint accountMintNESTNew;
+            uint accountMintableNEST;
 
-            (oErr, accountMintableVAI) = getMintableVAI(minter);
+            (oErr, accountMintableNEST) = getMintableNEST(minter);
             if (oErr != uint(Error.NO_ERROR)) {
                 return uint(Error.REJECTION);
             }
 
-            // check that user have sufficient mintableVAI balance
-            if (mintVAIAmount > accountMintableVAI) {
-                return fail(Error.REJECTION, FailureInfo.VAI_MINT_REJECTION);
+            // check that user have sufficient mintableNEST balance
+            if (mintNESTAmount > accountMintableNEST) {
+                return fail(Error.REJECTION, FailureInfo.NEST_MINT_REJECTION);
             }
 
-            (mErr, accountMintVAINew) = addUInt(ComptrollerLensInterface(address(comptroller)).mintedVAIs(minter), mintVAIAmount);
-            require(mErr == MathError.NO_ERROR, "VAI_MINT_AMOUNT_CALCULATION_FAILED");
-            uint error = comptroller.setMintedVAIOf(minter, accountMintVAINew);
+            (mErr, accountMintNESTNew) = addUInt(ComptrollerLensInterface(address(comptroller)).mintedNESTs(minter), mintNESTAmount);
+            require(mErr == MathError.NO_ERROR, "NEST_MINT_AMOUNT_CALCULATION_FAILED");
+            uint error = comptroller.setMintedNESTOf(minter, accountMintNESTNew);
             if (error != 0 ) {
                 return error;
             }
 
-            VAI(getVAIAddress()).mint(minter, mintVAIAmount);
-            emit MintVAI(minter, mintVAIAmount);
+            NEST(getNESTAddress()).mint(minter, mintNESTAmount);
+            emit MintNEST(minter, mintNESTAmount);
 
             return uint(Error.NO_ERROR);
         }
     }
 
     /**
-     * @notice Repay VAI
+     * @notice Repay NEST
      */
-    function repayVAI(uint repayVAIAmount) external returns (uint) {
+    function repayNEST(uint repayNESTAmount) external returns (uint) {
         if(address(comptroller) != address(0)) {
             require(!ComptrollerLensInterface(address(comptroller)).protocolPaused(), "protocol is paused");
 
             address repayer = msg.sender;
 
-            updateVenusVAIMintIndex();
-            ComptrollerLensInterface(address(comptroller)).distributeVAIMinterVenus(repayer, false);
+            updateCreditNESTMintIndex();
+            ComptrollerLensInterface(address(comptroller)).distributeNESTMinterCredit(repayer, false);
 
             uint actualBurnAmount;
 
-            uint vaiBalance = ComptrollerLensInterface(address(comptroller)).mintedVAIs(repayer);
+            uint nestBalance = ComptrollerLensInterface(address(comptroller)).mintedNESTs(repayer);
 
-            if(vaiBalance > repayVAIAmount) {
-                actualBurnAmount = repayVAIAmount;
+            if(nestBalance > repayNESTAmount) {
+                actualBurnAmount = repayNESTAmount;
             } else {
-                actualBurnAmount = vaiBalance;
+                actualBurnAmount = nestBalance;
             }
 
-            uint error = comptroller.setMintedVAIOf(repayer, vaiBalance - actualBurnAmount);
+            uint error = comptroller.setMintedNESTOf(repayer, nestBalance - actualBurnAmount);
             if (error != 0) {
                 return error;
             }
 
-            VAI(getVAIAddress()).burn(repayer, actualBurnAmount);
-            emit RepayVAI(repayer, actualBurnAmount);
+            NEST(getNESTAddress()).burn(repayer, actualBurnAmount);
+            emit RepayNEST(repayer, actualBurnAmount);
 
             return uint(Error.NO_ERROR);
         }
     }
 
     /**
-     * @notice Initialize the VenusVAIState
+     * @notice Initialize the CreditNESTState
      */
-    function _initializeVenusVAIState(uint blockNumber) external returns (uint) {
+    function _initializeCreditNESTState(uint blockNumber) external returns (uint) {
         // Check caller is admin
         if (msg.sender != admin) {
             return fail(Error.UNAUTHORIZED, FailureInfo.SET_COMPTROLLER_OWNER_CHECK);
         }
 
-        if (isVenusVAIInitialized == false) {
-            isVenusVAIInitialized = true;
-            uint vaiBlockNumber = blockNumber == 0 ? getBlockNumber() : blockNumber;
-            venusVAIState = VenusVAIState({
-                index: venusInitialIndex,
-                block: safe32(vaiBlockNumber, "block number overflows")
+        if (isCreditNESTInitialized == false) {
+            isCreditNESTInitialized = true;
+            uint nestBlockNumber = blockNumber == 0 ? getBlockNumber() : blockNumber;
+            creditNESTState = CreditNESTState({
+                index: creditInitialIndex,
+                block: safe32(nestBlockNumber, "block number overflows")
             });
         }
     }
 
     /**
-     * @notice Accrue XVS to by updating the VAI minter index
+     * @notice Accrue CREDIT to by updating the NEST minter index
      */
-    function updateVenusVAIMintIndex() public returns (uint) {
-        uint vaiMinterSpeed = ComptrollerLensInterface(address(comptroller)).venusVAIRate();
+    function updateCreditNESTMintIndex() public returns (uint) {
+        uint nestMinterSpeed = ComptrollerLensInterface(address(comptroller)).creditNESTRate();
         uint blockNumber = getBlockNumber();
-        uint deltaBlocks = sub_(blockNumber, uint(venusVAIState.block));
-        if (deltaBlocks > 0 && vaiMinterSpeed > 0) {
-            uint vaiAmount = VAI(getVAIAddress()).totalSupply();
-            uint venusAccrued = mul_(deltaBlocks, vaiMinterSpeed);
-            Double memory ratio = vaiAmount > 0 ? fraction(venusAccrued, vaiAmount) : Double({mantissa: 0});
-            Double memory index = add_(Double({mantissa: venusVAIState.index}), ratio);
-            venusVAIState = VenusVAIState({
+        uint deltaBlocks = sub_(blockNumber, uint(creditNESTState.block));
+        if (deltaBlocks > 0 && nestMinterSpeed > 0) {
+            uint nestAmount = NEST(getNESTAddress()).totalSupply();
+            uint creditAccrued = mul_(deltaBlocks, nestMinterSpeed);
+            Double memory ratio = nestAmount > 0 ? fraction(creditAccrued, nestAmount) : Double({mantissa: 0});
+            Double memory index = add_(Double({mantissa: creditNESTState.index}), ratio);
+            creditNESTState = CreditNESTState({
                 index: safe224(index.mantissa, "new index overflows"),
                 block: safe32(blockNumber, "block number overflows")
             });
         } else if (deltaBlocks > 0) {
-            venusVAIState.block = safe32(blockNumber, "block number overflows");
+            creditNESTState.block = safe32(blockNumber, "block number overflows");
         }
     }
 
     /**
-     * @notice Calculate XVS accrued by a VAI minter
-     * @param vaiMinter The address of the VAI minter to distribute XVS to
+     * @notice Calculate CREDIT accrued by a NEST minter
+     * @param nestMinter The address of the NEST minter to distribute CREDIT to
      */
-    function calcDistributeVAIMinterVenus(address vaiMinter) public returns(uint, uint, uint, uint) {
+    function calcDistributeNESTMinterCredit(address nestMinter) public returns(uint, uint, uint, uint) {
         // Check caller is comptroller
         if (msg.sender != address(comptroller)) {
             return (fail(Error.UNAUTHORIZED, FailureInfo.SET_COMPTROLLER_OWNER_CHECK), 0, 0, 0);
         }
 
-        Double memory vaiMintIndex = Double({mantissa: venusVAIState.index});
-        Double memory vaiMinterIndex = Double({mantissa: venusVAIMinterIndex[vaiMinter]});
-        venusVAIMinterIndex[vaiMinter] = vaiMintIndex.mantissa;
+        Double memory nestMintIndex = Double({mantissa: creditNESTState.index});
+        Double memory nestMinterIndex = Double({mantissa: creditNESTMinterIndex[nestMinter]});
+        creditNESTMinterIndex[nestMinter] = nestMintIndex.mantissa;
 
-        if (vaiMinterIndex.mantissa == 0 && vaiMintIndex.mantissa > 0) {
-            vaiMinterIndex.mantissa = venusInitialIndex;
+        if (nestMinterIndex.mantissa == 0 && nestMintIndex.mantissa > 0) {
+            nestMinterIndex.mantissa = creditInitialIndex;
         }
 
-        Double memory deltaIndex = sub_(vaiMintIndex, vaiMinterIndex);
-        uint vaiMinterAmount = ComptrollerLensInterface(address(comptroller)).mintedVAIs(vaiMinter);
-        uint vaiMinterDelta = mul_(vaiMinterAmount, deltaIndex);
-        uint vaiMinterAccrued = add_(ComptrollerLensInterface(address(comptroller)).venusAccrued(vaiMinter), vaiMinterDelta);
-        return (uint(Error.NO_ERROR), vaiMinterAccrued, vaiMinterDelta, vaiMintIndex.mantissa);
+        Double memory deltaIndex = sub_(nestMintIndex, nestMinterIndex);
+        uint nestMinterAmount = ComptrollerLensInterface(address(comptroller)).mintedNESTs(nestMinter);
+        uint nestMinterDelta = mul_(nestMinterAmount, deltaIndex);
+        uint nestMinterAccrued = add_(ComptrollerLensInterface(address(comptroller)).creditAccrued(nestMinter), nestMinterDelta);
+        return (uint(Error.NO_ERROR), nestMinterAccrued, nestMinterDelta, nestMintIndex.mantissa);
     }
 
     /*** Admin Functions ***/
@@ -202,21 +202,21 @@ contract VAIController is VAIControllerStorage, VAIControllerErrorReporter, Expo
         return uint(Error.NO_ERROR);
     }
 
-    function _become(VAIUnitroller unitroller) public {
+    function _become(NESTUnitroller unitroller) public {
         require(msg.sender == unitroller.admin(), "only unitroller admin can change brains");
         require(unitroller._acceptImplementation() == 0, "change not authorized");
     }
 
     /**
      * @dev Local vars for avoiding stack-depth limits in calculating account total supply balance.
-     *  Note that `vTokenBalance` is the number of vTokens the account owns in the market,
+     *  Note that `cTokenBalance` is the number of cTokens the account owns in the market,
      *  whereas `borrowBalance` is the amount of underlying that the account has borrowed.
      */
     struct AccountAmountLocalVars {
         uint totalSupplyAmount;
         uint sumSupply;
         uint sumBorrowPlusEffects;
-        uint vTokenBalance;
+        uint cTokenBalance;
         uint borrowBalance;
         uint exchangeRateMantissa;
         uint oraclePriceMantissa;
@@ -226,7 +226,7 @@ contract VAIController is VAIControllerStorage, VAIControllerErrorReporter, Expo
         Exp tokensToDenom;
     }
 
-    function getMintableVAI(address minter) public view returns (uint, uint) {
+    function getMintableNEST(address minter) public view returns (uint, uint) {
         PriceOracle oracle = ComptrollerLensInterface(address(comptroller)).oracle();
         CToken[] memory enteredMarkets = ComptrollerLensInterface(address(comptroller)).getAssetsIn(minter);
 
@@ -235,15 +235,15 @@ contract VAIController is VAIControllerStorage, VAIControllerErrorReporter, Expo
         uint oErr;
         MathError mErr;
 
-        uint accountMintableVAI;
+        uint accountMintableNEST;
         uint i;
 
         /**
-         * We use this formula to calculate mintable VAI amount.
-         * totalSupplyAmount * VAIMintRate - (totalBorrowAmount + mintedVAIOf)
+         * We use this formula to calculate mintable NEST amount.
+         * totalSupplyAmount * NESTMintRate - (totalBorrowAmount + mintedNESTOf)
          */
         for (i = 0; i < enteredMarkets.length; i++) {
-            (oErr, vars.vTokenBalance, vars.borrowBalance, vars.exchangeRateMantissa) = enteredMarkets[i].getAccountSnapshot(minter);
+            (oErr, vars.cTokenBalance, vars.borrowBalance, vars.exchangeRateMantissa) = enteredMarkets[i].getAccountSnapshot(minter);
             if (oErr != 0) { // semi-opaque error code, we assume NO_ERROR == 0 is invariant between upgrades
                 return (uint(Error.SNAPSHOT_ERROR), 0);
             }
@@ -261,8 +261,8 @@ contract VAIController is VAIControllerStorage, VAIControllerErrorReporter, Expo
                 return (uint(Error.MATH_ERROR), 0);
             }
 
-            // sumSupply += tokensToDenom * vTokenBalance
-            (mErr, vars.sumSupply) = mulScalarTruncateAddUInt(vars.tokensToDenom, vars.vTokenBalance, vars.sumSupply);
+            // sumSupply += tokensToDenom * cTokenBalance
+            (mErr, vars.sumSupply) = mulScalarTruncateAddUInt(vars.tokensToDenom, vars.cTokenBalance, vars.sumSupply);
             if (mErr != MathError.NO_ERROR) {
                 return (uint(Error.MATH_ERROR), 0);
             }
@@ -274,24 +274,24 @@ contract VAIController is VAIControllerStorage, VAIControllerErrorReporter, Expo
             }
         }
 
-        (mErr, vars.sumBorrowPlusEffects) = addUInt(vars.sumBorrowPlusEffects, ComptrollerLensInterface(address(comptroller)).mintedVAIs(minter));
+        (mErr, vars.sumBorrowPlusEffects) = addUInt(vars.sumBorrowPlusEffects, ComptrollerLensInterface(address(comptroller)).mintedNESTs(minter));
         if (mErr != MathError.NO_ERROR) {
             return (uint(Error.MATH_ERROR), 0);
         }
 
-        (mErr, accountMintableVAI) = mulUInt(vars.sumSupply, ComptrollerLensInterface(address(comptroller)).vaiMintRate());
-        require(mErr == MathError.NO_ERROR, "VAI_MINT_AMOUNT_CALCULATION_FAILED");
+        (mErr, accountMintableNEST) = mulUInt(vars.sumSupply, ComptrollerLensInterface(address(comptroller)).nestMintRate());
+        require(mErr == MathError.NO_ERROR, "NEST_MINT_AMOUNT_CALCULATION_FAILED");
 
-        (mErr, accountMintableVAI) = divUInt(accountMintableVAI, 10000);
-        require(mErr == MathError.NO_ERROR, "VAI_MINT_AMOUNT_CALCULATION_FAILED");
+        (mErr, accountMintableNEST) = divUInt(accountMintableNEST, 10000);
+        require(mErr == MathError.NO_ERROR, "NEST_MINT_AMOUNT_CALCULATION_FAILED");
 
 
-        (mErr, accountMintableVAI) = subUInt(accountMintableVAI, vars.sumBorrowPlusEffects);
+        (mErr, accountMintableNEST) = subUInt(accountMintableNEST, vars.sumBorrowPlusEffects);
         if (mErr != MathError.NO_ERROR) {
             return (uint(Error.REJECTION), 0);
         }
 
-        return (uint(Error.NO_ERROR), accountMintableVAI);
+        return (uint(Error.NO_ERROR), accountMintableNEST);
     }
 
     function getBlockNumber() public view returns (uint) {
@@ -299,10 +299,10 @@ contract VAIController is VAIControllerStorage, VAIControllerErrorReporter, Expo
     }
 
     /**
-     * @notice Return the address of the VAI token
-     * @return The address of VAI
+     * @notice Return the address of the NEST token
+     * @return The address of NEST
      */
-    function getVAIAddress() public view returns (address) {
+    function getNESTAddress() public view returns (address) {
         return 0x4BD17003473389A42DAF6a0a729f6Fdb328BbBd7;
     }
 }
