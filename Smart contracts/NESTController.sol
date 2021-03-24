@@ -22,7 +22,6 @@ interface ComptrollerLensInterface {
 
 /**
  * @title Credit's NEST Comptroller Contract
- * @author Credit
  */
 contract NESTController is NESTControllerStorage, NESTControllerErrorReporter, Exponential {
 
