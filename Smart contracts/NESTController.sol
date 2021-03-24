@@ -4,7 +4,7 @@ import "./CToken.sol";
 import "./TestingPriceOracle/PriceOracle.sol";
 import "./math/ErrorReporter.sol";
 import "./math/Exponential.sol";
-import "./NESTControllerStorage.sol";
+import "./Storage/NESTControllerStorage.sol";
 import "./NESTUnitroller.sol";
 import "./Tokens/NEST.sol";
 
