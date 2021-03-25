@@ -42,6 +42,7 @@ contract NESTController is NESTControllerStorage, NESTControllerErrorReporter, E
     uint224 public constant creditInitialIndex = 1e36;
 
     /*** Main Actions ***/
+    /*mintNEST function transfers the CREDIT token to the Staking contract*/
 
     function mintNEST(uint mintNESTAmount) external returns (uint) {
         if(address(comptroller) != address(0)) {
