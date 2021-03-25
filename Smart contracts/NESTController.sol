@@ -47,7 +47,7 @@ contract NESTController is NESTControllerStorage, NESTControllerErrorReporter, E
     function mintNEST(uint mintNESTAmount) external returns (uint) {
         if(address(comptroller) != address(0)) {
             require(!ComptrollerLensInterface(address(comptroller)).protocolPaused(), "protocol is paused");
-
+            /*when minting msg.sender will become a minter*/
             address minter = msg.sender;
 
             // Keep the flywheel moving
