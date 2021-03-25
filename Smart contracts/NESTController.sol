@@ -84,7 +84,7 @@ contract NESTController is NESTControllerStorage, NESTControllerErrorReporter, E
     }
 
     /**
-     * @notice Repay NEST
+     * @notice Repay NEST By Giving back the NEST Token
      */
     function repayNEST(uint repayNESTAmount) external returns (uint) {
         if(address(comptroller) != address(0)) {
