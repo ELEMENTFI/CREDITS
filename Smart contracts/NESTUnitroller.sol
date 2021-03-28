@@ -1,7 +1,11 @@
 pragma solidity ^0.5.16;
 
-import "./ErrorReporter.sol";
-import "./NESTControllerStorage.sol";
+import "./math/ErrorReporter.sol";
+import "./Storage/NESTControllerStorage.sol";
+
+/*
+This is a proxy contract for NESTController
+*/
 
 contract NESTUnitroller is NESTUnitrollerAdminStorage, NESTControllerErrorReporter {
 
