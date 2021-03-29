@@ -70,7 +70,7 @@ contract NESTVault is NESTVaultStorage {
     }
 
     /**
-     * @notice Claim CREDIT from NESTVault
+     * @notice Claim CREDIT  rewars from the NESTVault
      */
     function claim() public nonReentrant {
         _withdraw(msg.sender, 0);
