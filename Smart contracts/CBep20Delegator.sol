@@ -78,6 +78,9 @@ contract CBep20Delegator is CTokenInterface, CBep20Interface, CDelegatorInterfac
      * @param mintAmount The amount of the underlying asset to supply
      * @return uint 0=success, otherwise a failure (see ErrorReporter.sol for details)
      */
+     /*
+     Before mint we want to approve from a StableToken,then only we call mint function
+     */
     function mint(uint mintAmount) external returns (uint) {
         mintAmount; // Shh
         delegateAndReturn();
