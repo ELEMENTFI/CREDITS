@@ -113,6 +113,9 @@ contract CBep20Delegator is CTokenInterface, CBep20Interface, CDelegatorInterfac
       * @param borrowAmount The amount of the underlying asset to borrow
       * @return uint 0=success, otherwise a failure (see ErrorReporter.sol for details)
       */
+      /*
+      Before Borrow we want to enable the collateral,so that borrow will enable.
+      */
     function borrow(uint borrowAmount) external returns (uint) {
         borrowAmount; // Shh
         delegateAndReturn();
