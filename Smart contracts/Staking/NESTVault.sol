@@ -5,6 +5,9 @@ import "./NESTVaultProxy.sol";
 import "../Storage/NESTVaultStorage.sol";
 import "../math/NESTVaultErrorReporter.sol";
 
+/*
+NESTVault is for staking and withdraw the NEST token
+*/
 contract NESTVault is NESTVaultStorage {
     using SafeMath for uint256;
     using SafeBEP20 for IBEP20;
