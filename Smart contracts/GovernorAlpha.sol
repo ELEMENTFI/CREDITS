@@ -58,6 +58,11 @@ contract GovernorAlpha {
         uint startBlock;
 
         /// @notice The block at which voting ends: votes must be cast prior to this block
+ 
+ 
+ 
+ 
+ 
         uint endBlock;
 
         /// @notice Current number of votes in favor of this proposal
