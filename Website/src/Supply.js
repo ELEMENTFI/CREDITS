@@ -82,7 +82,7 @@ const redeem = async (event) => {
 
 		<form  id="create-course-form" >
     </form>
-    <div>Before we want to Mint  ,approve function to be happened</div>
+    <div>Before Mint,we want to approve </div>
     <button onClick = {approve}>Approve</button>
     <br /><br />
     <Popup trigger={<button> Mint</button>} position="right center"><br />
