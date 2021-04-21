@@ -3,6 +3,8 @@ import history from "./utils/history";
 import Popup from 'reactjs-popup';
 
 
+
+
 //import {useState} from 'react';
 import web3 from './web3';
 
@@ -19,23 +21,38 @@ function Supply() {
   
   const [tid,setId] = useState([]);
   const [tid1,setId1] = useState([]);
- 
+  var [tid2,setId2] = useState([]);
+
+  var [tid3,setId3] = useState([]);
+    useEffect(()=>{bal()},[])
+ const bal = async () => {
+
+   const accounts =  await web3.eth.getAccounts();
+  //  var ga =[];
+  var ga =  await sb.methods.balanceOf(accounts[0]).call();
+  setId2(ga);
+  var b = await sb.methods.borrowBalanceStored(accounts[0]).call();
+  setId3(b);
+  alert(ga);
+  alert(b);
+ }
       
   const approve = async (event) => {
     event.preventDefault();
     const accounts = await  web3.eth.getAccounts();
-    var a = 10000000000;
-    var amount = a*1000000000000000000;
-    var s = amount.toString();
-    alert(s)
+    var a = 1000;
+   
+    var amount = a+"000000000000000000";
+    // var s = amount.toString();
+    // alert(s)
     // var amount = 1000000000000000000000000000;
-   await busd.methods.approve("0x452b10e0882c661113553B1273e4b6d26071Aa0c",s).send({from:accounts[0]});
+   await busd.methods.approve("0x452b10e0882c661113553B1273e4b6d26071Aa0c",amount).send({from:accounts[0]});
     alert("approved")
   }      
 const mint = async (event) => {
   event.preventDefault();
   const accounts = await  web3.eth.getAccounts();
-  var amount = tid;
+  var amount = tid + "000000000000000000";
   alert(amount)
  await sb.methods.mint(amount).send({from:accounts[0]});
   alert("minted")
@@ -43,7 +60,7 @@ const mint = async (event) => {
 const redeem = async (event) => {
   event.preventDefault();
   const accounts = await  web3.eth.getAccounts();
-  var amount = tid1;
+  var amount = tid1+ "000000000000000000";
   alert(amount)
   await sb.methods.redeemUnderlying(amount).send({from:accounts[0]});
   alert("redeemed")
@@ -80,9 +97,15 @@ const redeem = async (event) => {
 <br></br>
 
 
-		<form  id="create-course-form" >
+		<form onSubmit ={bal} id="create-course-form" >
+   
+     
     </form>
-    <div>Before Mint,we want to approve </div>
+
+
+    <div> Balance of eBUSD <br />{tid2} </div><br />
+    <div>Available Borrow Balance <br />{tid3} </div><br />
+    <div>Before Mint we want to approve</div>
     <button onClick = {approve}>Approve</button>
     <br /><br />
     <Popup trigger={<button> Mint</button>} position="right center"><br />
