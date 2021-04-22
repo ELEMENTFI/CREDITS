@@ -20,7 +20,7 @@ function App() {
         <Router history={history}>
           <Switch>
             <Route path="/" exact>
-              <div class="display-4 mb-1">Choose a page we want to Proceed</div>
+              <div class="display-4 mb-1">CREDIT</div>
               <br></br><br></br><br></br>
               
               <button
@@ -30,7 +30,7 @@ function App() {
                   history.push("/Supply");
                 }}
               >
-                Supply Contract     
+                Supply Concept     
               </button>
 
 
