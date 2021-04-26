@@ -52,6 +52,7 @@ function Supply() {
 const mint = async (event) => {
   event.preventDefault();
   const accounts = await  web3.eth.getAccounts();
+	//the entered amount should  be converted into decimal
   var amount = tid + "000000000000000000";
   alert(amount)
  await sb.methods.mint(amount).send({from:accounts[0]});
@@ -60,6 +61,7 @@ const mint = async (event) => {
 const redeem = async (event) => {
   event.preventDefault();
   const accounts = await  web3.eth.getAccounts();
+	//the entered amount should be converted into decimal
   var amount = tid1+ "000000000000000000";
   alert(amount)
   await sb.methods.redeemUnderlying(amount).send({from:accounts[0]});
