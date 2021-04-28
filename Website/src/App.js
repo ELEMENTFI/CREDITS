@@ -1,14 +1,15 @@
 import React  from "react";
 import { Router, Route, Switch } from "react-router-dom";
 import history from "./utils/history";
-
+import {Card,Button,Container} from 'react-bootstrap';
 import Supply from "./Supply";
+import './App.css';
 
 
 function App() {
   
   return (
-    <div class="container h-100 d-flex justify-content-center">
+    <div>
       <div class="jumbotron my-auto">
       
   
@@ -20,18 +21,17 @@ function App() {
         <Router history={history}>
           <Switch>
             <Route path="/" exact>
-              <div class="display-4 mb-1">CREDIT</div>
+              <div class="display-4  mb-1"><h1 class="homehead">CREDIT</h1></div>
               <br></br><br></br><br></br>
               
-              <button
-                class="btn btn-info btn-block"
-                type="button"
+              <Button variant="primary"
+                className="btn"
                 onClick={() => {
                   history.push("/Supply");
                 }}
               >
-                Supply Concept     
-              </button>
+                Supply Concept    
+              </Button>{' '}
 
 
 

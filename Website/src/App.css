@@ -1,5 +1,10 @@
 .App {
   text-align: center;
+  font-family:"SF Pro Text","SF Pro Icons","Helvetica Neue","Helvetica","Arial",sans-serif;
+height: 100%;
+width: 100%;
+ background-color: black;
+  color: rgb(238, 238, 238);
 }
 
 .App-logo {
@@ -27,6 +32,32 @@
 .App-link {
   color: #61dafb;
 }
+  .homehead{
+    font-family: "SF Pro Text","SF Pro Icons","Helvetica Neue","Helvetica","Arial",sans-serif;
+    text-align:center;
+    font-size: 70px;
+    background: -webkit-radial-gradient(rgb(255, 255, 255), rgb(59, 59, 59));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-left: 20px;
+    font-weight:bolder;
+  } 
+.btn{
+color:white;
+font-size: medium;
+background-color: #007bff;
+padding: 10px;
+border-radius: 5px;
+border-color: #007bff;
+
+}  
+  
+
+.card{
+  align-items: center;
+  align-content: center;
+
+}
 
 @keyframes App-logo-spin {
   from {
@@ -35,4 +66,26 @@
   to {
     transform: rotate(360deg);
   }
+}
+.myModal{
+  background-color: #dadada;
+  color:rgb(0, 0, 0);
+  border-color: #FFC107;
+
+}
+.myModel:closeButton{
+ color: #FFC107;
+}
+
+.myInput{
+background-color: #161616;
+color: rgb(0, 0, 0);
+}
+.myInput:focus{
+ background-color: #161616;
+ color: white;
+ /*border-color: #FFC107;  
+ box-shadow: #FFC107; */
+ border-color: #FFC107;
+     box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.075) inset, 0px 0px 8px rgba(255, 193, 7, 0.5);
 }
