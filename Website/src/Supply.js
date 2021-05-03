@@ -208,9 +208,11 @@ const exitcollateral = async (event) => {
   
 
   return (    
-<Container fluid>
+    <div class="App container-fluid mt-n5">
+      
+
 <button
-                class="btn btn-primary float-right"
+                class="btn btn-primary "
                 type="button"
                 style={{ float:"left",marginLeft:"20px"}}
                 onClick={() => {
@@ -222,11 +224,14 @@ const exitcollateral = async (event) => {
 <div class="App">
 
 
-<h1 class="homehead">Supply Market</h1>
-
+<h1 style={{marginTop:"-50px"}} class="homehead">Supply Market</h1>
+<br/><br/>
 
 <center>
-<Card className="card" style={{backgroundColor: "black",boxShadow:"1px 1px 10px 2px #fa3455",height:"350px",width:"300px" }}>
+  
+    <Row>
+      <div class="col-7">
+      <Card className="card" style={{backgroundColor: "black",boxShadow:"1px 1px 10px 2px #dadada",height:"350px",width:"300px" }}>
 
 <br></br>
 
@@ -238,56 +243,60 @@ const exitcollateral = async (event) => {
     </form>
 
 
-    <h4> eBUSD Wallet Balance<br />{tid2} </h4><br/>
-    <h4>BUSD Wallet Balance <br />{tid3} </h4><br/>
-    <h4>Before Mint we want to approve</h4>
+    <h5> eBUSD Wallet Balance<br />{tid2} </h5><br/>
+    <h5>BUSD Wallet Balance <br />{tid3} </h5><br/>
     
-    <button class="btn" onClick = {approve}>Approve</button>
     </Card>
     
+      </div>
+      <div class="col-2">
+
+      <Card className="card" style={{backgroundColor: "black",boxShadow:"1px 1px 10px 2px #dadada",height:"350px",width:"300px" }}>
+
+<br/>
+      <h5>Before Mint we want to approve</h5>
     
-    
-    {/* <button  onClick={collateral}>Enable collateral</button> */}
-      <br />
-      <Container>
-        <Row xs={2} md={4} lg={6}>
-          <Col xs lg="2">
-          <Popup trigger={<button class="btn"> Mint</button>} position="right center">
-    <div>Enter the amount you want to  mint</div>
+    <button class="btn btn-primary" onClick = {approve}>Approve</button>
+        <br/>
+          <Popup trigger={<button class="btn btn-primary"> Mint</button>} position="right center">
+    <div class="text-white bg-dark">Enter the amount you want to  mint</div>
     <input type = "number" name="tid" required onChange={event => setId( event.target.value)} />
-    <button class="btn" onClick={mint}>Confirm</button>
+    <button class="btn btn-primary" onClick={mint}>Confirm</button>
+
     </Popup>
-          </Col>
-          <br/>
-          <Col>
-          
+    <br/>
+<div>         
+
 {tid4 === true ? 
 (
 (
 <div>
-<button class="btn" onClick={collateral}>Disable Collateral</button>
+<button class="btn btn-primary" onClick={collateral}>Disable Collateral</button>
 </div>
 )
 ):
 (
 (
 <div>
-<button class="btn" onClick={exitcollateral}>Enable Collateral</button> 
+<button class="btn btn-primary" onClick={exitcollateral}>Enable Collateral</button> 
 </div>
 )
 )}
-          </Col>
-          <br/>
-          <Col>
-          <Popup trigger={<button class="btn"> Redeem</button>} position="right center">
-    <div>Enter the amount you want to Redeem</div>
+    </div>    
+    <br/>
+          <Popup trigger={<button class="btn btn-primary"> Redeem</button>} position="right center">
+    <div class="text-white bg-dark">Enter the amount you want to Redeem</div>
     <input type = "number" name="tid1" required onChange={event => setId1( event.target.value)} />
-    <button class="btn" onClick={redeem}>Confirm</button>
+    <button class="btn btn-primary" onClick={redeem}>Confirm</button>
     </Popup>
-          </Col>
-        </Row>
-        
- </Container>     
+          
+ </Card>  
+    
+    
+    
+    {/* <button  onClick={collateral}>Enable collateral</button> */}
+      <br />
+         
       <br />
       
     <br />
@@ -297,7 +306,8 @@ const exitcollateral = async (event) => {
 
 
 
-
+</div>
+</Row>
 
 
 
@@ -363,7 +373,8 @@ const exitcollateral = async (event) => {
    
 	  
       </div>    
-      </Container>  
+    
+      </div>
   );
 }
 
