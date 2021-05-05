@@ -22,6 +22,8 @@ function Borrow() {
      const [tid1,setId1] = useState([]);
      const[tid3,setId3] = useState([]);
      const[tid2,setId2] = useState([]);
+     const[tid4,setId4] = useState([]);
+     const[tid5,setId5] = useState([]);
     // var [tid2,setId2] = useState([]);
   
     // // var [tid3,setId3] = useState([]);
@@ -32,32 +34,43 @@ function Borrow() {
    setId3( await compt.methods.getAccountLiquidity(accounts[0]).call());
 setId2(tid3[1]/1000000000000000000)
      console.log("value",tid3[1])
+     setId4(await Supply.methods.borrowBalanceStored(accounts[0]).call() );
+setId5(tid4/1000000000000000000)
+     console.log("borrow value",tid4)
+
     
    }
   //  alert(tid3[1]);
-   useEffect(()=>{bal()},[tid3[1]])
+   useEffect(()=>{bal()},[tid3[1],tid4])
    const borrow = async(event) =>{
     event.preventDefault();
     const accounts = await  web3.eth.getAccounts();
-    if(tid<=tid2)
- {
+    
     var am = tid * 100000000;
     var amount = am + "0000000000";
-  alert(amount)
+    if(tid<=tid2)
+ {
+  console.log(amount)
  await Supply.methods.borrow(amount).send({from:accounts[0]});
   alert("Borrowed")
  }
- else  alert("Your entered amount")
+ else  alert("Your entered amount should be less then the available borrow limit ")
    }
    const repayborrow = async(event) =>{
     event.preventDefault();
     const accounts = await  web3.eth.getAccounts();
+   
     var am = tid1 * 100000000;
    
     var amount = am + "0000000000";
-  alert(amount)
- await Supply.methods.repayborrow(amount).send({from:accounts[0]});
+  
+    if(tid1<=tid5)
+    {
+ console.log(amount)
+ await Supply.methods.repayBorrow(amount).send({from:accounts[0]});
   alert("Borrowed")
+    }
+    else alert("Your entered amount should be less then the available borrow balance ")
    }
         
    
@@ -110,7 +123,7 @@ setId2(tid3[1]/1000000000000000000)
 (
 (
 <div class="text-white ">
-Borrow Available {tid2}
+Available Borrow Limit {tid2}
 </div>
 )
 )}
@@ -123,11 +136,12 @@ Borrow Available {tid2}
     <button class="btn btn-primary" onClick={borrow}>Confirm</button>
     </Popup>
 
-      
+      <br /><br />
+      <div>Borrow Balance {tid4/1000000000000000000}</div>
       <br /><br />
       <Popup trigger={<button class="btn btn-primary">  Repay Borrow</button>} position="right center"><br />
     <div class="text-white bg-dark">Enter the amount you want to Repay Borrow</div>
-    <input type = "number"  name="tid1" required onChange={event => setId( event.target.value)} />
+    <input type = "number"  name="tid1" required onChange={event => setId1( event.target.value)} />
     <button class="btn btn-primary" onClick={repayborrow}>Confirm</button>
     </Popup>
        

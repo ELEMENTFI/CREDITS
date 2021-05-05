@@ -157,7 +157,7 @@ function Supply() {
   setId2(ga/1000000000000000000);
   //var b = await sb.methods.borrowBalanceStored(accounts[0]).call();
   // setId3(b);
-  alert(ga);
+  console.log(ga);
   var b = await busd.methods.balanceOf(accounts[0]).call();
 setId3(b/1000000000000000000)
   var c = await compt.methods.checkMembership(accounts[0],"0x0075256cFc7467159360db309F5AC930ACef037d").call();
@@ -180,7 +180,7 @@ const mint = async (event) => {
   event.preventDefault();
   const accounts = await  web3.eth.getAccounts();
   var amount = tid + "000000000000000000";
-  alert(amount)
+ console.log(amount)
  await sb.methods.mint(amount).send({from:accounts[0]});
   alert("minted")
 }
@@ -188,7 +188,7 @@ const redeem = async (event) => {
   event.preventDefault();
   const accounts = await  web3.eth.getAccounts();
   var amount = tid1+ "000000000000000000";
-  alert(amount)
+ console.log(amount)
   await sb.methods.redeemUnderlying(amount).send({from:accounts[0]});
   alert("redeemed")
 }
