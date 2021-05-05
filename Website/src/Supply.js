@@ -149,14 +149,12 @@ function Supply() {
  const bal = async () => {
 
    const accounts =  await web3.eth.getAccounts();
-  //  var ga =[];
-//  alert( await sb.methods.getAccountSnapshot(accounts[0]).call());
+  
   
   var ga =  await sb.methods.balanceOf(accounts[0]).call();
   
   setId2(ga/1000000000000000000);
-  //var b = await sb.methods.borrowBalanceStored(accounts[0]).call();
-  // setId3(b);
+ 
   console.log(ga);
   var b = await busd.methods.balanceOf(accounts[0]).call();
 setId3(b/1000000000000000000)
@@ -170,9 +168,7 @@ setId3(b/1000000000000000000)
     var a = 1000;
    
     var amount = a+"000000000000000000";
-    // var s = amount.toString();
-    // alert(bigint())
-    // var amount = 1000000000000000000000000000;
+    
    await busd.methods.approve("0x0075256cFc7467159360db309F5AC930ACef037d",amount).send({from:accounts[0]});
     alert("approved")
   }      
