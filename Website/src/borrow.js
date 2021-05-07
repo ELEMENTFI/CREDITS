@@ -32,6 +32,7 @@ function Borrow() {
  
       const accounts =  await web3.eth.getAccounts();
    setId3( await compt.methods.getAccountLiquidity(accounts[0]).call());
+    //This is for converting them into decimal
 setId2(tid3[1]/1000000000000000000)
      console.log("value",tid3[1])
      setId4(await Supply.methods.borrowBalanceStored(accounts[0]).call() );
@@ -56,6 +57,7 @@ setId5(tid4/1000000000000000000)
  }
  else  alert("Your entered amount should be less then the available borrow limit ")
    }
+   //Borrow can be repayed by the user which they can borrow
    const repayborrow = async(event) =>{
     event.preventDefault();
     const accounts = await  web3.eth.getAccounts();
