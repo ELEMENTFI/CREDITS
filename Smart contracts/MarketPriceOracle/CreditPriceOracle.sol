@@ -5,7 +5,7 @@ import "../TestingPriceOracle/PriceOracle.sol";
 import "../CBep20.sol";
 import "./BEP20Interface.sol";
 import "../math/SafeMath.sol";
-
+//This priceoracle file using the market value for exchange rate
 interface IStdReference {
     /// A structure returned whenever someone requests for standard reference data.
     struct ReferenceData {
