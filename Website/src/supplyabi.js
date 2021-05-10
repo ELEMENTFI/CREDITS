@@ -1,5 +1,7 @@
 import web3 from "./web3";
 
+//BEP20Delegator contract address
+
 var poda ='0x0075256cFc7467159360db309F5AC930ACef037d';
 
 
