@@ -31,7 +31,8 @@ function MyVerticallyCenteredModal1(props) {
 
     const accounts = await web3.eth.getAccounts();
     var amount=document.getElementById("tid");
-   amount = amount + "000000000000000000";
+     var a1 = amount* 10000;	  
+   amount = a1 + "00000000000000";
     alert(amount)
    await sb.methods.mint(amount).send({from:accounts[0]});
     alert("minted")
