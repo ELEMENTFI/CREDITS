@@ -1,6 +1,7 @@
-# CREDIT
+# CREDIT PROTOCOL
 
-Credit is the stable coin minting platform backed by TREE Collateral and other crypto assets without centralized control.
+COLLATERAL BANKING REDEFINED
+Credit Protoocol is a a new kind of "Self-Paying" DEFI Lending Protocol with yield based risk derivatives powered by Algorand Blockchain
 
 # Table of Contents
   - Install
